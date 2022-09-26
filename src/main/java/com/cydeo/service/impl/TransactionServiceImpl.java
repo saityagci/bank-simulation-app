@@ -3,6 +3,7 @@ package com.cydeo.service.impl;
 import com.cydeo.enums.AccountType;
 import com.cydeo.exceptions.AccountOwnerShipException;
 import com.cydeo.exceptions.BadRequestException;
+import com.cydeo.exceptions.BalanceNotSufficientException;
 import com.cydeo.model.Account;
 import com.cydeo.model.Transaction;
 import com.cydeo.repository.AccountRepository;
@@ -26,7 +27,24 @@ public class TransactionServiceImpl  implements TransactionService {
     public Transaction makeTransfer(Account sender, Account receiver, BigDecimal amount, Date creationDate, String message) {
         validateAccount(sender,receiver);
         checkAccountOwnerShip(sender,receiver);
+        executeBalanceAndUpdateIfRequired(amount,sender,receiver);
         return null;
+    }
+
+    private void executeBalanceAndUpdateIfRequired(BigDecimal amount, Account sender, Account receiver) {
+        if(checkSenderBalance(sender,amount)){
+            // make transaction
+            sender.setBalance(sender.getBalance().subtract(amount));
+            receiver.setBalance(receiver.getBalance().add(amount));
+        }else {
+            //not enough balance
+            throw new BalanceNotSufficientException("Balance is not enough  for this transfer");
+        }
+    }
+
+    private boolean checkSenderBalance(Account sender, BigDecimal amount) {
+        // verify that sender has enough balance
+        return sender.getBalance().subtract(amount).compareTo(BigDecimal.ZERO)>=0;
     }
 
     private void checkAccountOwnerShip(Account sender, Account receiver) {
@@ -36,7 +54,9 @@ public class TransactionServiceImpl  implements TransactionService {
          */
         if ((sender.getAccountType().equals(AccountType.SAVING)||receiver.getAccountType().equals(AccountType.SAVING))
         &!sender.getUserId().equals(receiver.getUserId())) {
-            throw new AccountOwnerShipException("If one of the account is saving , userId must be the same");
+            throw new AccountOwnerShipException("One of the account is Savings. "+
+                    "Transactions between savings and checking account are allowed same userId "+
+                    "User Id's dont match");
         }
 
     }
