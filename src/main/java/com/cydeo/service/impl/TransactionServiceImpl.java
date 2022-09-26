@@ -44,8 +44,8 @@ public class TransactionServiceImpl  implements TransactionService {
 
     }
 
-    private void findAccountById(UUID id) {
-        accountRepository.findById();
+    private Account findAccountById(UUID id) {
+        return accountRepository.findById();
 
     }
 
