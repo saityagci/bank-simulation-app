@@ -1,5 +1,7 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.enums.AccountType;
+import com.cydeo.exceptions.AccountOwnerShipException;
 import com.cydeo.exceptions.BadRequestException;
 import com.cydeo.model.Account;
 import com.cydeo.model.Transaction;
@@ -23,7 +25,20 @@ public class TransactionServiceImpl  implements TransactionService {
     @Override
     public Transaction makeTransfer(Account sender, Account receiver, BigDecimal amount, Date creationDate, String message) {
         validateAccount(sender,receiver);
+        checkAccountOwnerShip(sender,receiver);
         return null;
+    }
+
+    private void checkAccountOwnerShip(Account sender, Account receiver) {
+        /*
+        write a if statement that check if one of the account is saving and
+        user if od sender or receiver is not the same, throw AccountOwnershipException
+         */
+        if ((sender.getAccountType().equals(AccountType.SAVING)||receiver.getAccountType().equals(AccountType.SAVING))
+        &!sender.getUserId().equals(receiver.getUserId())) {
+            throw new AccountOwnerShipException("If one of the account is saving , userId must be the same");
+        }
+
     }
 
     private void validateAccount(Account sender, Account receiver) {
@@ -45,7 +60,7 @@ public class TransactionServiceImpl  implements TransactionService {
     }
 
     private Account findAccountById(UUID id) {
-        return accountRepository.findById();
+        return accountRepository.findById(id);
 
     }
 
