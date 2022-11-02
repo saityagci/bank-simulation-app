@@ -49,7 +49,7 @@ public class TransactionServiceImpl  implements TransactionService {
 
     private void checkAccountOwnerShip(Account sender, Account receiver) {
         /*
-        write a if statement that check if one of the account is saving and
+        write an if statement that check if one of the account is saving and
         user if od sender or receiver is not the same, throw AccountOwnershipException
          */
         if ((sender.getAccountType().equals(AccountType.SAVING)||receiver.getAccountType().equals(AccountType.SAVING))
@@ -68,7 +68,7 @@ public class TransactionServiceImpl  implements TransactionService {
             -if the account exist in the database(repository)
          */
         if (sender==null || receiver==null){
-            throw new BadRequestException("Sender or Reciver cannot be null");
+            throw new BadRequestException("Sender or Receiver cannot be null");
         }
         if (sender.getId().equals(receiver.getId())){
             throw new BadRequestException("Sender account needs to be different than receiver");
