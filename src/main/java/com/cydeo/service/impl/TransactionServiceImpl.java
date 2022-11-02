@@ -33,6 +33,7 @@ public class TransactionServiceImpl  implements TransactionService {
         checkAccountOwnerShip(sender,receiver);
         executeBalanceAndUpdateIfRequired(amount,sender,receiver);
 
+        //after all validations are completed, and money is transferred
         Transaction transaction=Transaction.builder().amount(amount)
                 .sender(sender.getId()).receiver(receiver.getId())
                 .creationDate(creationDate).message(message).build();
@@ -94,6 +95,7 @@ public class TransactionServiceImpl  implements TransactionService {
 
     @Override
     public List<Transaction> findAllTransactions() {
-        return null;
+
+        return transactionRepository.findAll() ;
     }
 }
