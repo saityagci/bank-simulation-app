@@ -7,8 +7,10 @@ import com.cydeo.exceptions.BalanceNotSufficientException;
 import com.cydeo.model.Account;
 import com.cydeo.model.Transaction;
 import com.cydeo.repository.AccountRepository;
+import com.cydeo.repository.TransactionRepository;
 import com.cydeo.service.TransactionService;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -18,9 +20,11 @@ import java.util.UUID;
 public class TransactionServiceImpl  implements TransactionService {
 
     AccountRepository accountRepository;
+    TransactionRepository transactionRepository;
 
-    public TransactionServiceImpl(AccountRepository accountRepository) {
+    public TransactionServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @Override
@@ -28,7 +32,11 @@ public class TransactionServiceImpl  implements TransactionService {
         validateAccount(sender,receiver);
         checkAccountOwnerShip(sender,receiver);
         executeBalanceAndUpdateIfRequired(amount,sender,receiver);
-        return null;
+
+        Transaction transaction=Transaction.builder().amount(amount)
+                .sender(sender.getId()).receiver(receiver.getId())
+                .creationDate(creationDate).message(message).build();
+        return transactionRepository.save(transaction);
     }
 
     private void executeBalanceAndUpdateIfRequired(BigDecimal amount, Account sender, Account receiver) {
