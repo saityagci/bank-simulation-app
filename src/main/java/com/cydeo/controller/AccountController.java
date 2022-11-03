@@ -3,7 +3,7 @@ package com.cydeo.controller;
 import com.cydeo.enums.AccountType;
 import com.cydeo.model.Account;
 import com.cydeo.service.AccountService;
-import org.springframework.stereotype.Component;
+import com.cydeo.service.impl.TransactionServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +17,13 @@ import java.util.UUID;
 @Controller
 public class AccountController {
     private final AccountService accountService;
+    private final TransactionServiceImpl transactionServiceImpl;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, TransactionServiceImpl transactionServiceImpl) {
         this.accountService = accountService;
+        this.transactionServiceImpl = transactionServiceImpl;
     }
+
 
     @GetMapping("/index")
     public String getIndex(Model model){
@@ -46,4 +49,5 @@ public class AccountController {
         accountService.deleteAccount(id);
         return "redirect:/index";
     }
+
 }
