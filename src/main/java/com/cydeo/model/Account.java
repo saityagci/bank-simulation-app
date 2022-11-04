@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class Account {
     private UUID id;
-    @NonNull
+    @NotNull
     @Positive
     private BigDecimal balance;
     @NotNull
