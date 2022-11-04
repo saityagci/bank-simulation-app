@@ -45,6 +45,8 @@ public class TransactionController {
     @GetMapping("/transaction/{id}")
     public String getTransactionList(@PathVariable("id") UUID id,Model model){
         System.out.println(id);
+        model.addAttribute("transactions",transactionService.findTransactionListById(id));
+
         return "transaction/transactions" ;
     }
 }
