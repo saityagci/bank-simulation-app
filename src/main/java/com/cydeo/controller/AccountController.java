@@ -1,7 +1,7 @@
 package com.cydeo.controller;
 
 import com.cydeo.enums.AccountType;
-import com.cydeo.model.Account;
+import com.cydeo.dto.AccountDTO;
 import com.cydeo.service.AccountService;
 import com.cydeo.service.impl.TransactionServiceImpl;
 import org.springframework.stereotype.Controller;
@@ -34,19 +34,19 @@ public class AccountController {
     }
     @GetMapping("/create-form")
     public String getCreateForm(Model model){
-        model.addAttribute("account",Account.builder().build());
+        model.addAttribute("account", AccountDTO.builder().build());
         model.addAttribute("accountType", AccountType.values());
 
         return "account/create-account";
     }
     @PostMapping("/create")
-    public String createAccount(@Valid @ModelAttribute("account") Account account, BindingResult bindingResult,Model model){
+    public String createAccount(@Valid @ModelAttribute("account") AccountDTO accountDTO, BindingResult bindingResult, Model model){
        if (bindingResult.hasErrors()){
            model.addAttribute("accountTypes",AccountType.values());
            return "account/create-account";
        }
-        accountService.createNewAccount(account.getBalance(),new Date(),
-               account.getAccountType(),account.getUserId());
+        accountService.createNewAccount(accountDTO.getBalance(),new Date(),
+               accountDTO.getAccountType(), accountDTO.getUserId());
 
         return "redirect:/index";
     }

@@ -1,8 +1,7 @@
 package com.cydeo.repository;
 
-import com.cydeo.model.Transaction;
+import com.cydeo.dto.TransactionDTO;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,25 +11,25 @@ import java.util.stream.Collectors;
 
 @Component
 public class TransactionRepository {
-    public static List<Transaction> transactionList= new ArrayList<>();
-    public Transaction save(Transaction transaction){
-        transactionList.add(transaction);
-        return transaction;
+    public static List<TransactionDTO> transactionDTOList = new ArrayList<>();
+    public TransactionDTO save(TransactionDTO transactionDTO){
+        transactionDTOList.add(transactionDTO);
+        return transactionDTO;
     }
 
-    public List<Transaction> findAll() {
-        return transactionList;
+    public List<TransactionDTO> findAll() {
+        return transactionDTOList;
     }
 
-    public List<Transaction> lastTransactions() {
-       return transactionList.stream().sorted
-               (Comparator.comparing(Transaction::getCreationDate).reversed()).limit(10)
+    public List<TransactionDTO> lastTransactions() {
+       return transactionDTOList.stream().sorted
+               (Comparator.comparing(TransactionDTO::getCreationDate).reversed()).limit(10)
                .collect(Collectors.toList());
     }
 
-    public List<Transaction> findTransactionListById(UUID id) {
-       return transactionList.stream().filter(transaction -> transaction.getSender().equals(id)
-        || transaction.getReceiver().equals(id)).collect(Collectors.toList());
+    public List<TransactionDTO> findTransactionListById(UUID id) {
+       return transactionDTOList.stream().filter(transactionDTO -> transactionDTO.getSender().equals(id)
+        || transactionDTO.getReceiver().equals(id)).collect(Collectors.toList());
     }
 }
 

@@ -1,7 +1,7 @@
 package com.cydeo;
 
 import com.cydeo.enums.AccountType;
-import com.cydeo.model.Account;
+import com.cydeo.dto.AccountDTO;
 import com.cydeo.service.AccountService;
 import com.cydeo.service.TransactionService;
 import org.springframework.boot.SpringApplication;
@@ -23,9 +23,9 @@ public class BankSimulationAppApplication {
         TransactionService transactionService=container.getBean(TransactionService.class);
 
         // create 2 account sender and receiver
-        Account sender=accountService.createNewAccount(BigDecimal.valueOf(70),new Date(),
+        AccountDTO sender=accountService.createNewAccount(BigDecimal.valueOf(70),new Date(),
                 AccountType.CHECKING,1L);
-        Account receiver=accountService.createNewAccount(BigDecimal.valueOf(50),new Date(),
+        AccountDTO receiver=accountService.createNewAccount(BigDecimal.valueOf(50),new Date(),
                 AccountType.SAVING,1L);
         accountService.listAllAccount().forEach(System.out::println);
         transactionService.makeTransfer(sender,receiver,new BigDecimal(40),new Date(),"Transaction");
