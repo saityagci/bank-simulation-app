@@ -29,7 +29,7 @@ public class TransactionController {
     @GetMapping("make-transfer")
     public String makeTransfer(Model model){
         model.addAttribute("accounts",accountService.listAllAccount());
-        model.addAttribute("transaction", TransactionDTO.builder().build());
+        model.addAttribute("transaction", new TransactionDTO());
         model.addAttribute("lastTransactions",transactionService.lastTransactionList());
         return "transaction/make-transfer";
     }
@@ -40,8 +40,8 @@ public class TransactionController {
             return "transaction/make-transfer";
         }
 
-        AccountDTO sender=accountService.retrieveById(transactionDTO.getSender());
-        AccountDTO receiver=accountService.retrieveById(transactionDTO.getReceiver());
+        AccountDTO sender=accountService.retrieveById(transactionDTO.getSender().getId());
+        AccountDTO receiver=accountService.retrieveById(transactionDTO.getReceiver().getId());
 
 
         transactionService.makeTransfer(sender,receiver, transactionDTO.getAmount(),new Date(), transactionDTO.getMessage());

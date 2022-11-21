@@ -34,7 +34,7 @@ public class AccountController {
     }
     @GetMapping("/create-form")
     public String getCreateForm(Model model){
-        model.addAttribute("account", AccountDTO.builder().build());
+        model.addAttribute("account", new AccountDTO());
         model.addAttribute("accountType", AccountType.values());
 
         return "account/create-account";
