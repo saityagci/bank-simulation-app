@@ -1,6 +1,7 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.AccountDTO;
+import com.cydeo.entity.Account;
 import com.cydeo.enums.AccountStatus;
 import com.cydeo.enums.AccountType;
 import com.cydeo.repository.AccountRepository;
@@ -28,7 +29,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<AccountDTO> listAllAccount() {
-        return accountRepository.findAll();
+        /*
+            we are getting list of accounts from repository
+            but, we need to return list of accountDTO to controller
+            what we need to do is we will convert Account to AccountDTO
+         */
+        List<Account> accountList=accountRepository.findAll();
+        return accountList;
     }
 
     @Override
