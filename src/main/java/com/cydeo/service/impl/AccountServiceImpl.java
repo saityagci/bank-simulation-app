@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 @Component
@@ -58,5 +58,11 @@ public class AccountServiceImpl implements AccountService {
         //find account return as DTO
 
         return accountMapper.convertToDto(accountRepository.findById(id).get());
+    }
+
+    @Override
+    public List<AccountDTO> listAllActiveAccounts() {
+        List<Account> accountList=accountRepository.findAllByAccountStatus(AccountStatus.ACTIVE);
+        return accountList.stream().map(accountMapper::convertToDto).collect(Collectors.toList());
     }
 }
