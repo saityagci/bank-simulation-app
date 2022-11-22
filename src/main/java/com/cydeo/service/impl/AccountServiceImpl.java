@@ -3,16 +3,14 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.AccountDTO;
 import com.cydeo.entity.Account;
 import com.cydeo.enums.AccountStatus;
-import com.cydeo.enums.AccountType;
 import com.cydeo.mapper.AccountMapper;
 import com.cydeo.repository.AccountRepository;
 import com.cydeo.service.AccountService;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -49,12 +47,16 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deleteAccount(Long id) {
-        AccountDTO accountDTO =accountRepository.findById(id);
-        accountDTO.setAccountStatus(AccountStatus.DELETED);
+        //we need to find correct account based on id and change status to deleted
+        Account account =accountRepository.findById(id).get();
+        account.setAccountStatus(AccountStatus.DELETED);
+        accountRepository.save(account);
     }
 
     @Override
     public AccountDTO retrieveById(Long id) {
-        return accountRepository.findById(id);
+        //find account return as DTO
+
+        return accountMapper.convertToDto(accountRepository.findById(id).get());
     }
 }
