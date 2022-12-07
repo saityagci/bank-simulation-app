@@ -47,7 +47,7 @@ public class TransactionServiceImpl  implements TransactionService {
             executeBalanceAndUpdateIfRequired(amount,sender,receiver);
 
             //after all validations are completed, and money is transferred
-            TransactionDTO transactionDTO = new TransactionDTO();
+            TransactionDTO transactionDTO = new TransactionDTO(sender,receiver,amount,message,creationDate);
             transactionRepository.save(transactionMapper.convertToEntity(transactionDTO));
         }else {
             throw new UnderConstructionException("App is under construction, try again later");

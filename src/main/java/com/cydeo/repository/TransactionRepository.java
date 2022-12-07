@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction,Long> {
-   @Query(value = "SELECT * FROM WHERE transactions ORDER BY creation_date DESC LIMIT 10 ",nativeQuery = true)
+    @Query(value = "SELECT * FROM transactions ORDER BY creation_date DESC LIMIT 10",nativeQuery = true)
+
     List<Transaction> findLastTenTransactions();
     @Query("SELECT t FROM Transaction t WHERE t.sender.id=?1 OR t.receiver.id=?1")
     List<Transaction> findTransactionListById(Long id);

@@ -28,12 +28,12 @@ public class TransactionController {
     @GetMapping("make-transfer")
     public String makeTransfer(Model model){
         model.addAttribute("accounts",accountService.listAllAccount());
-        model.addAttribute("transaction", new TransactionDTO());
+        model.addAttribute("transactionDTO", new TransactionDTO());
         model.addAttribute("lastTransactions",transactionService.lastTransactionList());
         return "transaction/make-transfer";
     }
     @PostMapping("/transfer")
-    public String postMakeTransfer(@Valid @ModelAttribute("transaction") TransactionDTO transactionDTO, BindingResult bindingResult, Model model){
+    public String postMakeTransfer(@Valid @ModelAttribute("transactionDTO") TransactionDTO transactionDTO, BindingResult bindingResult, Model model){
         if (bindingResult.hasErrors()){
             model.addAttribute("accounts",accountService.listAllAccount());
             return "transaction/make-transfer";
