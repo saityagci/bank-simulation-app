@@ -65,4 +65,10 @@ public class AccountServiceImpl implements AccountService {
         List<Account> accountList=accountRepository.findAllByAccountStatus(AccountStatus.ACTIVE);
         return accountList.stream().map(accountMapper::convertToDto).collect(Collectors.toList());
     }
+
+    @Override
+    public void updateAccount(AccountDTO accountDTO) {
+        accountRepository.save(accountMapper.convertToEntity(accountDTO));
+
+    }
 }

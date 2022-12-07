@@ -13,6 +13,7 @@ import com.cydeo.mapper.AccountMapper;
 import com.cydeo.mapper.TransactionMapper;
 import com.cydeo.repository.AccountRepository;
 import com.cydeo.repository.TransactionRepository;
+import com.cydeo.service.AccountService;
 import com.cydeo.service.TransactionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -30,13 +31,15 @@ public class TransactionServiceImpl  implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountMapper accountMapper;
     private final TransactionMapper transactionMapper;
+    private final AccountService accountService;
 
 
-    public TransactionServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository, AccountMapper accountMapper, TransactionMapper transactionMapper) {
+    public TransactionServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository, AccountMapper accountMapper, TransactionMapper transactionMapper, AccountService accountService) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.accountMapper = accountMapper;
         this.transactionMapper = transactionMapper;
+        this.accountService = accountService;
     }
 
     @Override
@@ -60,6 +63,18 @@ public class TransactionServiceImpl  implements TransactionService {
             // make transaction
             sender.setBalance(sender.getBalance().subtract(amount));
             receiver.setBalance(receiver.getBalance().add(amount));
+            /*
+            get the dto from database for both sender and receiver, update balance and save it
+            create accountService updateAccount method to save it
+             */
+            //retrieve the object from database for sender
+            AccountDTO senderAcc=accountService.retrieveById(sender.getId());
+            senderAcc.setBalance(sender.getBalance());
+            // save again to database
+            accountService.updateAccount(senderAcc);
+            AccountDTO receiverAcc=accountService.retrieveById(receiver.getId());
+            receiverAcc.setBalance(receiver.getBalance());
+            accountService.updateAccount(receiverAcc);
         }else {
             //not enough balance
             throw new BalanceNotSufficientException("Balance is not enough  for this transfer");

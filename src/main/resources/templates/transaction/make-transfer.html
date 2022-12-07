@@ -94,12 +94,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="trasaction:${lastTransactions}">
-                        <td th:text="${trasaction.sender}"></td>
-                        <td th:text="${trasaction.receiver}"></td>
-                        <td th:text="${trasaction.amount}"></td>
-                        <td th:text="${trasaction.creationDate}"></td>
-                        <td th:text="${trasaction.message}"></td>
+                    <tr th:each="transactionDTO:${lastTransactions}">
+                        <td th:text="${transactionDTO.sender.id}"></td>
+                        <td th:text="${transactionDTO.receiver.id}"></td>
+                        <td th:text="${transactionDTO.amount}"></td>
+                        <td th:text="${transactionDTO.creationDate}"></td>
+                        <td th:text="${transactionDTO.message}"></td>
                     </tr>
                     </tbody>
                 </table>
