@@ -10,6 +10,7 @@ import com.cydeo.exceptions.BalanceNotSufficientException;
 import com.cydeo.exceptions.UnderConstructionException;
 
 import com.cydeo.mapper.AccountMapper;
+import com.cydeo.mapper.TransactionMapper;
 import com.cydeo.repository.AccountRepository;
 import com.cydeo.repository.TransactionRepository;
 import com.cydeo.service.TransactionService;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class TransactionServiceImpl  implements TransactionService {
@@ -27,12 +29,14 @@ public class TransactionServiceImpl  implements TransactionService {
    private final  AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final AccountMapper accountMapper;
+    private final TransactionMapper transactionMapper;
 
 
-    public TransactionServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository, AccountMapper accountMapper) {
+    public TransactionServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository, AccountMapper accountMapper, TransactionMapper transactionMapper) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.accountMapper = accountMapper;
+        this.transactionMapper = transactionMapper;
     }
 
     @Override
@@ -107,7 +111,7 @@ public class TransactionServiceImpl  implements TransactionService {
     @Override
     public List<TransactionDTO> findAllTransactions() {
 
-        return transactionRepository.findAll().stream().map() ;
+        return transactionRepository.findAll().stream().map(transactionMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
