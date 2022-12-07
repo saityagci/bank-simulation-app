@@ -40,7 +40,7 @@ public class TransactionServiceImpl  implements TransactionService {
     }
 
     @Override
-    public TransactionDTO makeTransfer(AccountDTO sender, AccountDTO receiver, BigDecimal amount, Date creationDate, String message) {
+    public void makeTransfer(AccountDTO sender, AccountDTO receiver, BigDecimal amount, Date creationDate, String message) {
         if (!underConstruction) {
             validateAccount(sender,receiver);
             checkAccountOwnerShip(sender,receiver);
@@ -48,10 +48,11 @@ public class TransactionServiceImpl  implements TransactionService {
 
             //after all validations are completed, and money is transferred
             TransactionDTO transactionDTO = new TransactionDTO();
-            return transactionRepository.save(transactionDTO);
+            transactionRepository.save(transactionMapper.convertToEntity(transactionDTO));
         }else {
             throw new UnderConstructionException("App is under construction, try again later");
         }
+
     }
 
     private void executeBalanceAndUpdateIfRequired(BigDecimal amount, AccountDTO sender, AccountDTO receiver) {
@@ -116,12 +117,14 @@ public class TransactionServiceImpl  implements TransactionService {
 
     @Override
     public List<TransactionDTO> lastTransactionList() {
-        return transactionRepository.lastTransactions();
+        return transactionRepository.findLastTenTransactions().stream()
+                .map(transactionMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<TransactionDTO> findTransactionListById(Long id) {
-       return  transactionRepository.findTransactionListById(id);
+       return  transactionRepository.findTransactionListById(id).stream()
+               .map(transactionMapper::convertToDTO).collect(Collectors.toList());
 
     }
 }
