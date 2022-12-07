@@ -2,12 +2,14 @@ package com.cydeo.service.impl;
 
 import com.cydeo.dto.AccountDTO;
 import com.cydeo.dto.TransactionDTO;
+import com.cydeo.entity.Account;
 import com.cydeo.enums.AccountType;
 import com.cydeo.exceptions.AccountOwnerShipException;
 import com.cydeo.exceptions.BadRequestException;
 import com.cydeo.exceptions.BalanceNotSufficientException;
 import com.cydeo.exceptions.UnderConstructionException;
 
+import com.cydeo.mapper.AccountMapper;
 import com.cydeo.repository.AccountRepository;
 import com.cydeo.repository.TransactionRepository;
 import com.cydeo.service.TransactionService;
@@ -22,12 +24,15 @@ import java.util.List;
 public class TransactionServiceImpl  implements TransactionService {
     @Value("${under_construction}")
     private boolean underConstruction;
-    AccountRepository accountRepository;
-    TransactionRepository transactionRepository;
+   private final  AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+    private final AccountMapper accountMapper;
 
-    public TransactionServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository) {
+
+    public TransactionServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository, AccountMapper accountMapper) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
+        this.accountMapper = accountMapper;
     }
 
     @Override
@@ -94,14 +99,15 @@ public class TransactionServiceImpl  implements TransactionService {
     }
 
     private AccountDTO findAccountById(Long id) {
-        return accountRepository.findById(id);
+        Account account= accountRepository.findById(id).get();
+        return accountMapper.convertToDto(account);
 
     }
 
     @Override
     public List<TransactionDTO> findAllTransactions() {
 
-        return transactionRepository.findAll() ;
+        return transactionRepository.findAll().stream().map() ;
     }
 
     @Override
